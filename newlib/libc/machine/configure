@@ -794,6 +794,7 @@ bfin
 cr16
 cris
 crx
+csky
 d10v
 d30v
 epiphany
@@ -11870,6 +11871,8 @@ subdirs="$subdirs a29k"
 	cris) subdirs="$subdirs cris"
  ;;
 	crx) subdirs="$subdirs crx"
+ ;;
+	csky) subdirs="$subdirs csky"
  ;;
 	d10v) subdirs="$subdirs d10v"
  ;;
