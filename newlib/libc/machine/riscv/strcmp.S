@@ -36,32 +36,54 @@ strcmp:
 .size	strcmp, .-strcmp
 #else
   or    a4, a0, a1
+#if defined(__riscv_xtheadc)
+#else
   li    t2, -1
+#endif
   and   a4, a4, SZREG-1
   bnez  a4, .Lmisaligned
 
 #if SZREG == 4
   li a5, 0x7f7f7f7f
 #else
+#ifndef __riscv_xtheadc
   ld a5, mask
+#endif
 #endif
 
   .macro check_one_word i n
     REG_L a2, \i*SZREG(a0)
     REG_L a3, \i*SZREG(a1)
 
+#if defined(__riscv_xtheadc)
+    tstnbz t0, a2
+    xor   t1, a2, a3
+    or    t2, t0, t1
+#else
     and   t0, a2, a5
     or    t1, a2, a5
     add   t0, t0, a5
     or    t0, t0, t1
-
     bne   t0, t2, .Lnull\i
+#endif
+
     .if \i+1-\n
+#if defined(__riscv_xtheadc)
+      bnez  t2, .Lmismatch
+#else
       bne   a2, a3, .Lmismatch
+#endif
     .else
+#if defined(__riscv_xtheadc)
+      bnez  t2, .Lmismatch
+      add   a0, a0, \n*SZREG
+      add   a1, a1, \n*SZREG
+      j    .Lloop
+#else
       add   a0, a0, \n*SZREG
       add   a1, a1, \n*SZREG
       beq   a2, a3, .Lloop
+#endif
       # fall through to .Lmismatch
     .endif
   .endm
@@ -96,6 +118,17 @@ strcmp:
   # backwards branch to .Lloop contained above
 
 .Lmismatch:
+#if defined(__riscv_xtheadc)
+  rev    t1, t2
+  ff1    t0, t1
+  andi   t0, t0, 0xf8
+  srl t1, a2, t0
+  andi t1, t1, 0xff
+  srl t2, a3, t0
+  andi t2, t2, 0xff
+  sub  a0, t1, t2
+  ret
+#else
   # words don't match, but a2 has no null byte.
 #if __riscv_xlen == 64
   sll   a4, a2, 48
@@ -128,6 +161,7 @@ strcmp:
   and   a5, a5, 0xff
   sub   a0, a4, a5
   ret
+#endif
 
 .Lmisaligned:
   # misaligned
@@ -150,16 +184,20 @@ strcmp:
   foundnull 3 5
   foundnull 4 5
 #else
+#ifndef __riscv_xtheadc
   foundnull 0 3
   foundnull 1 3
   foundnull 2 3
 #endif
+#endif
 .size	strcmp, .-strcmp
 
 #if SZREG == 8
+#ifndef __riscv_xtheadc
 .section .srodata.cst8,"aM",@progbits,8
 .align 3
 mask:
 .dword 0x7f7f7f7f7f7f7f7f
+#endif
 #endif
 #endif
