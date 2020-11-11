@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdint.h>
 
-size_t strlen(const char *str)
+__attribute__((aligned(4))) size_t strlen(const char *str)
 {
   const char *start = str;
 

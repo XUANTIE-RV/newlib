@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdint.h>
 
-char *strcpy(char *dst, const char *src)
+__attribute__((aligned(4))) char *strcpy(char *dst, const char *src)
 {
   char *dst0 = dst;
 

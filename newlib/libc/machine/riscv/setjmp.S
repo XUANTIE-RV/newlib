@@ -14,6 +14,7 @@
 /* int setjmp (jmp_buf);  */
   .globl  setjmp
   .type   setjmp, @function
+  .align  2
 setjmp:
 	REG_S ra,  0*SZREG(a0)
 	REG_S s0,  1*SZREG(a0)
