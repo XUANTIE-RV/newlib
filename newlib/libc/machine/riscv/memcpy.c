@@ -9,6 +9,9 @@
    http://www.opensource.org/licenses.
 */
 
+#if 0
+//memcpy all define in memcpy-asm.S
+
 #if defined(PREFER_SIZE_OVER_SPEED) || defined(__OPTIMIZE_SIZE__)
 //memcpy defined in memcpy-asm.S
 #else
@@ -85,4 +88,6 @@ small:
     goto small;
   return aa;
 }
+#endif
+
 #endif
