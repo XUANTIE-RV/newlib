@@ -75,6 +75,7 @@ am_lib_a_OBJECTS = lib_a-memmove.$(OBJEXT) \
 	lib_a-strlen.$(OBJEXT) lib_a-strcpy.$(OBJEXT) \
 	lib_a-strcmp.$(OBJEXT) lib_a-setjmp.$(OBJEXT) \
 	lib_a-ieeefp.$(OBJEXT) lib_a-ffs.$(OBJEXT)
+am_lib_a_OBJECTS += lib_a-pthread.$(OBJEXT)
 lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp =
@@ -202,6 +203,7 @@ AM_CCASFLAGS = $(INCLUDES)
 noinst_LIBRARIES = lib.a
 lib_a_SOURCES = memmove.S memmove-stub.c memset.S memcpy-asm.S memcpy.c strlen.c \
 	strcpy.c strcmp.S setjmp.S ieeefp.c ffs.c
+lib_a_SOURCES += pthread.c
 
 lib_a_CCASFLAGS = $(AM_CCASFLAGS)
 lib_a_CFLAGS = $(AM_CFLAGS)
@@ -336,6 +338,12 @@ lib_a-ffs.o: ffs.c
 
 lib_a-ffs.obj: ffs.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-ffs.obj `if test -f 'ffs.c'; then $(CYGPATH_W) 'ffs.c'; else $(CYGPATH_W) '$(srcdir)/ffs.c'; fi`
+
+lib_a-pthread.o: pthread.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-pthread.o `test -f 'pthread.c' || echo '$(srcdir)/'`pthread.c
+
+lib_a-pthread.obj: pthread.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-pthread.obj `if test -f 'pthread.c'; then $(CYGPATH_W) 'pthread.c'; else $(CYGPATH_W) '$(srcdir)/pthread.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
